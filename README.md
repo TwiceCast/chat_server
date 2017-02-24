@@ -3,19 +3,19 @@ Chat server used to manage chats in website
 
 Chat is based on event system communication. All events used client-side and server-side are listed and described here:
 
+___
+
 ## Table Of Contents
 * [Client-side Events](#client-side-events)
   * [connection](#connection-c)
   * [Auth](#auth-c)
   * [message](#message-c)
   * [cerror](#cerror-c)
-* Server-side Events
+* [Server-side Events](#server-side-events)
   * [connection](#connection-s)
   * [disconnect](#disconnect-s)
   * [Auth](#auth-s)
   * [message](#message-s)
-
-___
 
 ## Client-side Events
 Client-side events are all events sended by the server to the client.
