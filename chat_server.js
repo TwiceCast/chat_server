@@ -1,14 +1,9 @@
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 
-function AuthentificationRequired(client) {
-	client.emit('cerror', {'code': 401, 'message': 'Authentification required'});
-}
-
-function isAuth(client)
-{
-	return client.username && client.password && client.room;
-}
+var utils = require('./utils');
+var exceptions = require('./exceptions');
+var events = require('./events');
 
 io.on('connection', function(client) {
 	console.log("New connection !");
@@ -17,28 +12,32 @@ io.on('connection', function(client) {
 	client.password = null;
 	client.room = null;
 	
-	client.on('Auth', function(data) {
-		if (!data.hasOwnProperty("user") ||
-			!data.hasOwnProperty("password") ||
-			!data.hasOwnProperty("room"))
+	client.on('auth', function(data) {
+		if (!utils.hasProperties(data, events.AuthProperties, events.AUTH_STRICT)) {
 			client.emit('cerror', {'code': 400, 'message': 'Authentification error'});
+			console.log("Client authentification error ! (Properties)");
+		}
 		else
 		{
-			client.username = data.user;
+			client.username = data.username;
 			client.password = data.password;
 			client.room = data.room;
 			client.join(client.room, function() {
-				client.emit('Auth', {'code': 200, 'message': 'Authentification complete'});
+				client.emit('auth', {'code': 200, 'message': 'Authentification complete'});
 				console.log("Client (" + client.username + ") Joined #" + client.room + "!");
 			});
 		}
 	});
 	
-	//client.on('event', function(data){});
-	
 	client.on('message', function(data) {
-		if (!isAuth(client))
-			AuthentificationRequired(client);
+		if (!utils.isAuth(client)) {
+			utils.AuthentificationRequired(client);
+			console.log("Client message error ! (Authentification)");
+		}
+		else if (!utils.hasProperties(data, events.MessageProperties, events.MESSAGE_STRICT)) {
+			client.emit('cerror', {'code': 400, 'message': 'Message syntax error !'});
+			console.log("Client message error ! (Properties)");
+		}
 		else
 		{
 			data.user = client.username;
