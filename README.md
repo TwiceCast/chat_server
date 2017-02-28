@@ -19,7 +19,8 @@ ___
   * [auth](#auth-s)
   * [message](#message-s)
 * [Errors](#errors)
-  * []
+  * [400 (Syntax Error)](#400-syntax-error)
+  * [401 (Authentification required)](#401-authentification-required)
 
 ## Starting up
 Install all the dependencies using `npm install`
@@ -96,4 +97,4 @@ ___
 The received event does not follow the required format.
 Some mandatory properties are missing.
 ### 401 (Authentification required)
-To perform the followed event, the user must be authentificated (see [auth event](#auth-c)).
+To perform the followed event, the user must be authentificated (see [auth event](#auth-s)).
