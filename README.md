@@ -37,7 +37,7 @@ Client-side events are all events sended by the server to the client.
 ### connection (C)
 This event is received when the connection is established with the server.
 The server will wait for you to send an Auth event or to disconnect.
-Other sended events will result in a cerror (401 Unauthorized).
+Other sended events will result in a cerror ([401 Authentification required](#401-authentification-required)).
 ### auth (C)
 This event is received when the authentification was succesfuly made !
 Exemple of data received:
