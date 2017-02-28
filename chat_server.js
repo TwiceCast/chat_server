@@ -14,7 +14,7 @@ io.on('connection', function(client) {
 	
 	client.on('auth', function(data) {
 		if (!utils.hasProperties(data, events.AuthProperties, events.AUTH_STRICT)) {
-			client.emit('cerror', {'code': 400, 'message': 'Authentification error'});
+			client.emit('cerror', {'code': 400, 'message': 'Authentification syntax error'});
 			console.log("Client authentification error ! (Properties)");
 		}
 		else
@@ -57,4 +57,16 @@ io.on('connection', function(client) {
 	});
 });
 
-server.listen(3005);
+var port = 3005;
+
+if (process.argv.length > 2) {
+	try {
+		port = parseInt(process.argv[2]);
+	} catch (e) {
+		
+	}
+}
+
+console.log('Server listening on ' + port + ' !');
+
+server.listen(port);
