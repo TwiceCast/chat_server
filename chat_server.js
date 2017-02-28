@@ -47,7 +47,10 @@ io.on('connection', function(client) {
 	});
 	
 	client.on('disconnect', function(){
-		console.log(client.username + " left !");
+		if (client.username)
+			console.log(client.username + " left !");
+		else
+			console.log('Un-Auth user left !');
 		client.username = null;
 		client.room = null;
 		client.password = null;
