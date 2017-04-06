@@ -58,6 +58,8 @@ module.exports = {
 		
 		var colored_dots = 0;
 		var uncolored_dots = 10;
+		if (resumeAll)
+			uncolored_dots = 20;
 		var tmp_success = success;
 	
 		while (tmp_success >= dot_count) {
@@ -65,10 +67,15 @@ module.exports = {
 			colored_dots++;
 			uncolored_dots--;
 		}
-	
+		
+		while (success == max_count && uncolored_dots > 0) {
+			colored_dots++;
+			uncolored_dots--;
+		}
+		
 		readline.cursorTo(process.stdout, 0); // Clearing old progress
 		if (resumeAll)
-			process.stdout.write(' [');
+			process.stdout.write('[');
 		else
 			process.stdout.write('Testing...[');
 		while (colored_dots > 0) {

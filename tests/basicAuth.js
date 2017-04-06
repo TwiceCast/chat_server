@@ -19,7 +19,7 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': 'mdr', 'password':'lol'});
+		socket.emit('auth', {'username': 'test', 'password':'test'});
 	},
 	
 	tooManyParameters: function(socket) {
@@ -37,7 +37,7 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': 'mdr', 'password':'lol', 'room': 'test', 'moreArg': 'arg'});
+		socket.emit('auth', {'username': 'test', 'password':'test', 'room': 'test', 'moreArg': 'arg'});
 	},
 	
 	wrongParameters: function(socket) {
@@ -55,7 +55,7 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': 'mdr', 'passwords':'lol', 'room': 'testroom'});
+		socket.emit('auth', {'username': 'test', 'passwords':'test', 'room': 'testroom'});
 	},
 	
 	noParameter: function(socket) {
@@ -91,7 +91,7 @@ module.exports = {
 		
 		socket.on('cerror', fail);
 		socket.on('auth', success);
-		socket.emit('auth', {'username': 'mdr', 'password': 'lol', 'room': 'testroom'});
+		socket.emit('auth', {'username': 'test', 'password': 'test', 'room': 'testroom'});
 	},
 	
 	emptyRoomName: function(socket) {
@@ -109,7 +109,7 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': 'mdr', 'password':'lol', 'room': ''});
+		socket.emit('auth', {'username': 'test', 'password':'test', 'room': ''});
 	},
 	
 	emptyUsername: function(socket) {
@@ -127,7 +127,7 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': '', 'password':'lol', 'room': 'testroom'});
+		socket.emit('auth', {'username': '', 'password':'test', 'room': 'testroom'});
 	},
 	
 	emptyPassword: function(socket) {
@@ -145,7 +145,43 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': 'mdr', 'password':'', 'room': 'testroom'});
+		socket.emit('auth', {'username': 'test', 'password':'', 'room': 'testroom'});
+	},
+	
+	wrongUsername: function(socket) {
+		var success = function(data) {
+			socket.off('cerror', success);
+			socket.off('auth', fail);
+			testProcessing.validateTest(socket);
+		}.bind(this, socket, testProcessing, success, fail);
+		
+		var fail = function(data) {
+			socket.off('cerror', success);
+			socket.off('auth', fail);
+			testProcessing.unvalidateTest(socket);
+		}.bind(this, socket, testProcessing, success, fail);
+		
+		socket.on('auth', fail);
+		socket.on('cerror', success);
+		socket.emit('auth', {'username': 'fakeTest', 'password':'test', 'room': 'testroom'});
+	},
+	
+	wrongPassword: function(socket) {
+		var success = function(data) {
+			socket.off('cerror', success);
+			socket.off('auth', fail);
+			testProcessing.validateTest(socket);
+		}.bind(this, socket, testProcessing, success, fail);
+		
+		var fail = function(data) {
+			socket.off('cerror', success);
+			socket.off('auth', fail);
+			testProcessing.unvalidateTest(socket);
+		}.bind(this, socket, testProcessing, success, fail);
+		
+		socket.on('auth', fail);
+		socket.on('cerror', success);
+		socket.emit('auth', {'username': 'test', 'password':'test2test', 'room': 'testroom'});
 	},
 	
 	alreadyAuth: function(socket) {
@@ -172,11 +208,11 @@ module.exports = {
 			socket.off('cerror', failStep1);
 			socket.on('auth', fail);
 			socket.on('cerror', success);
-			socket.emit('auth', {'username': 'mdr', 'password': 'lol', 'room': 'testroom'});
+			socket.emit('auth', {'username': 'test', 'password': 'test', 'room': 'testroom'});
 		}.bind(this, socket, testProcessing, step1, failStep1, success, fail);
 		
 		socket.on('auth', step1);
 		socket.on('cerror', failStep1);
-		socket.emit('auth', {'username': 'mdr', 'password': 'lol', 'room': 'testroom'});
+		socket.emit('auth', {'username': 'test', 'password': 'test', 'room': 'testroom'});
 	}
 }
