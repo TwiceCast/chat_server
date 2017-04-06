@@ -18,9 +18,12 @@ ___
   * [disconnect](#disconnect-s)
   * [auth](#auth-s)
   * [message](#message-s)
+  * [setTestMode](#settestmode-s)
+  * [resetSocket](#resetsocket-s)
 * [Errors](#errors)
   * [400 (Syntax Error)](#400-syntax-error)
   * [401 (Authentification required)](#401-authentification-required)
+  * [403 (Unauthorized)](#403-unauthorized)
 
 ## Starting up
 Install all the dependencies using `npm install`
