@@ -147,6 +147,7 @@ module.exports = {
 				this.finishCallback();
 			}
 		} else if (this.catTested >= testList.TESTS[this.cats[this.cat]].length) {
+			this.printProgress(this.catTested, this.catCleared, false);
 			this.cat++;
 			this.catTested = 0;
 			this.catCleared = 0;
