@@ -18,7 +18,9 @@ module.exports = {
 		}
 		this.cleared++;
 		this.tested++;
-		this.printProgress(this.tested, this.cleared, true);
+		this.catTested++;
+		this.catCleared++;
+		this.printProgress(this.catTested, this.catCleared, true);
 		this.nextTest(socket);
 	},
 	
@@ -31,7 +33,8 @@ module.exports = {
 			this.timeoutChecker = null;
 		}
 		this.tested++;
-		this.printProgress(this.tested, this.cleared, true);
+		this.catTested++;
+		this.printProgress(this.catTested, this.catCleared, true);
 		this.nextTest(socket);
 	},
 	
@@ -45,10 +48,14 @@ module.exports = {
 	/*
 	** Displays testing progression
 	*/
-	printProgress: function(current, success, processing = false) {
-		var max_count = testList.TESTS.length;
+	printProgress: function(current, success, processing = false, resumeAll = false) {
+		var max_count = testList.TESTS[this.cats[this.cat]].length;
+		if (resumeAll)
+			max_count = this.testCount;
 		var dot_count = max_count / 10;
-	
+		if (resumeAll)
+			dot_count = max_count / 20;
+		
 		var colored_dots = 0;
 		var uncolored_dots = 10;
 		var tmp_success = success;
@@ -60,7 +67,10 @@ module.exports = {
 		}
 	
 		readline.cursorTo(process.stdout, 0); // Clearing old progress
-		process.stdout.write('Testing...[');
+		if (resumeAll)
+			process.stdout.write(' [');
+		else
+			process.stdout.write('Testing...[');
 		while (colored_dots > 0) {
 			process.stdout.write(' '.bgGreen);
 			colored_dots--;
@@ -81,50 +91,75 @@ module.exports = {
 	** DO NOT TOUCH BELOW !!
 	** Test processing logic
 	*/
+	testCount: 0,
 	cleared: 0,
 	tested: 0,
+	cats: [],
+	cat: 0,
+	catTested: 0,
+	catCleared: 0,
 	timeoutChecker: null,
 	finishCallback: null,
 	
 	// Initialize test process
 	test: function(socket, callback = null) {
-		console.log(testList.TESTS.length.toString().green.bold + ' test(s) found !'.bold);
+		this.testCount = 0;
+		var tmp = 0;
+		for (var i in testList.TESTS) {
+			this.cats[tmp] = i;
+			this.testCount += testList.TESTS[i].length;
+			tmp++;
+		}
+		console.log(this.testCount.toString().green.bold + ' test(s) found !'.bold);
 		this.cleared = 0;
 		this.tested = 0;
+		this.cat = 0;
+		this.catTested = 0;
+		this.catCleared = 0;
 		this.finishCallback = callback;
+		console.log(this.cats[this.cat].bold.cyan);
 		this.nextTest(socket);
 	},
 	
 	// launch next test
 	nextTest: function(socket) {
-		if (this.tested >= testList.TESTS.length) {
-			this.printProgress(this.tested, this.cleared, false);
+		if (this.tested >= this.testCount) {
+			this.printProgress(this.catTested, this.catCleared, false);
 			socket.close();
 			console.log('Test(s) runned successfuly!');
-			console.log('Total: ' + testList.TESTS.length.toString().bold.green);
-			if (this.cleared == testList.TESTS.length) {
+			console.log('Total: ' + this.testCount.toString().bold.green);
+			if (this.cleared == this.testCount) {
 				console.log('Passed: ' + this.cleared.toString().bold.green);
-			} else if (this.cleared <= testList.TESTS.length / 2) {
+			} else if (this.cleared <= this.testCount / 2) {
 				console.log('Passed: ' + this.cleared.toString().bold.red);
 			} else {
 				console.log('Passed: ' + this.cleared.toString().bold.yellow);
 			}
+			this.printProgress(this.tested, this.cleared, false, true);
 			if (this.finishCallback != null) {
 				this.finishCallback();
 			}
+		} else if (this.catTested >= testList.TESTS[this.cats[this.cat]].length) {
+			this.cat++;
+			this.catTested = 0;
+			this.catCleared = 0;
+			console.log('');
+			console.log(this.cats[this.cat].bold.cyan);
+			this.nextTest(socket);
 		} else {
-			this.executeTest(this.tested, socket);
+			socket.emit('resetSocket');
+			this.executeTest(this.catTested, socket);
 		}
 	},
 	
 	// execute test
 	executeTest: function(id, socket) {
-		this.printProgress(this.tested, this.cleared, true);
+		this.printProgress(this.catTested, this.catCleared, true);
 		if (this.timeoutChecker != null) {
 			clearTimeout(this.timeoutChecker);
 			this.timeoutChecker = null;
 		}
 		this.timeoutChecker = setTimeout(function() {this.timedoutTest(socket);}.bind(this, socket), config.TEST_TIMEOUT);
-		testList.TESTS[id](socket);
+		testList.TESTS[this.cats[this.cat]][id](socket);
 	}
 }

@@ -20,11 +20,12 @@ var testList = require('./tests/TESTS');
 ** Test module dependencies
 */
 var basicAuth = require('./tests/basicAuth');
+var basicMessages = require('./tests/basicMessages');
 
 /*
 ** Test module registrations
 */
-var testModules = [basicAuth];
+var testModules = [basicAuth, basicMessages];
 
 
 
@@ -39,10 +40,16 @@ var testModules = [basicAuth];
 */
 for (var ind in testModules) {
 	var module = testModules[ind];
-	for (var p in module) {
-		if (typeof module[p] == 'function') {
-			testList.TESTS.push(module[p]);
+	if (module.hasOwnProperty('name')) {
+		testList.TESTS[module.name] = [];
+		for (var p in module) {
+			if (typeof module[p] == 'function') {
+				testList.TESTS[module.name].push(module[p]);
+			}
 		}
+	}
+	else {
+		console.log('Missing parameter name (' + ind + ')');
 	}
 }
 
@@ -57,6 +64,7 @@ var socket = io('http://' + config.SERVER_URL, {'reconnectionAttempts': config.R
 */
 socket.on('connect', function(){
 	console.log('Connection ' + 'OK '.green + '!');
+	socket.emit('setTestMode', {'value': true});
 	testProcessing.test(socket);
 });
 
