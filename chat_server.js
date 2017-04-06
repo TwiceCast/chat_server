@@ -55,6 +55,15 @@ io.on('connection', function(client) {
 			client.emit('cerror', {'code': 403, 'message': 'Already logged in !'});
 			console.log("Client (" + client.username + ") already auth !")
 		}
+		else if (data.room == "") {
+			client.emit('cerror', {'code': 400, 'message': 'Authentification error: Missing room'});
+		}
+		else if (data.username == "") {
+			client.emit('cerror', {'code': 400, 'message': 'Authentification error: Missing username'});
+		}
+		else if (data.password == "") {
+			client.emit('cerror', {'code': 400, 'message': 'Authentification error: Missing password'});
+		}
 		else
 		{
 			client.username = data.username;
