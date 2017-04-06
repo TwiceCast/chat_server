@@ -91,6 +91,17 @@ Exemple of data sended:
  'content': 'formated message',
 }
 ```
+### setTestMode (S)
+This event is used to enable/disable test mode for the current client.
+Exemple of data sended:
+```javascript
+{
+ 'value': true/false,
+}
+```
+### resetSocket (S)
+*Test mode only!*
+This event is used to reset the client to it's default state.
 ___
 ## Errors
 ### 400 (Syntax Error)
@@ -98,3 +109,5 @@ The received event does not follow the required format.
 Some mandatory properties are missing.
 ### 401 (Authentification required)
 To perform the followed event, the user must be authentificated (see [auth event](#auth-s)).
+### 403 (Unauthorized)
+The user is not allowed to perfom the event.
