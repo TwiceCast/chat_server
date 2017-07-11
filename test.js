@@ -21,11 +21,12 @@ var testList = require('./tests/TESTS');
 */
 var basicAuth = require('./tests/basicAuth');
 var basicMessages = require('./tests/basicMessages');
+var basicFormating = require('./tests/basicFormating');
 
 /*
 ** Test module registrations
 */
-var testModules = [basicAuth, basicMessages];
+var testModules = [basicAuth, basicMessages, basicFormating];
 
 
 

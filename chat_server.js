@@ -1,9 +1,13 @@
+const https = require('https');
+const API_URL = "twicecast.ovh";
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 
 var utils = require('./utils');
 var exceptions = require('./exceptions');
 var events = require('./events');
+
+var config = require('./config');
 
 var TEST_MODE_ENABLE = true;
 
@@ -13,6 +17,7 @@ io.on('connection', function(client) {
 	client.username = null;
 	client.password = null;
 	client.room = null;
+	client.token = null;
 	
 	client.testMode = false;
 	
@@ -66,13 +71,57 @@ io.on('connection', function(client) {
 		}
 		else
 		{
-			client.username = data.username;
-			client.password = data.password;
-			client.room = data.room;
-			client.join(client.room, function() {
-				client.emit('auth', {'code': 200, 'message': 'Authentification complete'});
-				console.log("Client (" + client.username + ") Joined #" + client.room + "!");
-			});
+			var options = {
+				host: API_URL,
+				path: '/login',
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'}
+			};
+			
+			var callback = function(response) {
+				var str = '';
+				response.on('data', function (chunk) {
+					str += chunk;
+				});
+				
+				response.on('end', function () {
+					try
+					{
+						var response = JSON.parse(str);
+						if (response['token'])
+						{
+							client.username = data.username;
+							client.password = data.password;
+							client.room = data.room;
+							client.token = response['token'];
+							client.join(client.room, function() {
+								client.emit('auth', {'code': 200, 'message': 'Authentification complete'});
+								console.log("Client (" + client.username + ") Joined #" + client.room + "!");
+							});
+						}
+						else
+						{
+							console.log(response);
+							client.emit('cerror', {'code': 401, 'message': 'Authentification failed'});
+						}
+					}
+					catch (e)
+					{
+						client.emit('cerror', {'code': 401, 'message': 'Authentification failed'});
+						console.log(e.message);
+					}
+				});
+			}
+			
+			var req = https.request(options, callback);
+			var auth_data = {};
+			auth_data['email'] = data.username;
+			auth_data['password'] = data.password;
+			console.log("auth");
+			var r_a = JSON.stringify(auth_data);
+			console.log(r_a);
+			req.write(r_a);
+			req.end();
 		}
 	});
 	
@@ -104,10 +153,11 @@ io.on('connection', function(client) {
 		}
 		client.room = null;
 		client.password = null;
+		client.token = null;
 	});
 });
 
-var port = 3005;
+var port = config.SERVER_PORT;
 
 if (process.argv.length > 2) {
 	try {

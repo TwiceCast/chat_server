@@ -181,7 +181,7 @@ module.exports = {
 		
 		socket.on('auth', fail);
 		socket.on('cerror', success);
-		socket.emit('auth', {'username': 'test', 'password':'test2test', 'room': 'testroom'});
+		socket.emit('auth', {'username': 'test', 'password':'', 'room': 'testroom'});
 	},
 	
 	alreadyAuth: function(socket) {
