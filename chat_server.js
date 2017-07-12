@@ -1,5 +1,5 @@
 const https = require('https');
-const API_URL = "twicecast.ovh";
+const API_URL = "api.twicecast.ovh";
 var server = require('http').createServer();
 var io = require('socket.io')(server);
 
