@@ -20,6 +20,12 @@ module.exports = {
 		});
 		
 		return res;
+	},
+	
+	RemoveClient: function(socket) {
+		if (socket in this.clients) {
+			var id = this.clients.indexOf(socket);
+			this.clients.splice(id, 1);
+		}
 	}
-
 }

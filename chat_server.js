@@ -30,20 +30,6 @@ io.on('connection', function(client) {
 	});
 	
 	EventManager.RegisterEvents(client);
-	
-	client.on('disconnect', function(){
-		if (client.username)
-			console.log(client.username + " left !");
-		else
-			console.log('Un-Auth user left !');
-		client.username = null;
-		if (client.room) {
-			client.leave(client.room);
-		}
-		client.room = null;
-		client.password = null;
-		client.token = null;
-	});
 });
 
 var port = config.SERVER_PORT;
