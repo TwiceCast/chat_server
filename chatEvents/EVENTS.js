@@ -1,11 +1,18 @@
+/* CHAT EVENTS IMPORTS */
 const authEvent = require('./auth');
+const messageEvent = require('./message');
 
-/* TEST EVENTS */
+/* TEST EVENTS IMPORTS */
 const resetSocketEvent = require('./resetSocket');
 const setTestModeEvent = require('./setTestMode');
 
 module.exports = {
-	EVENTS: [authEvent, resetSocketEvent, setTestModeEvent],
+	EVENTS: [
+	/* CHAT EVENTS */
+	authEvent, messageEvent,
+	/* TEST EVENTS */
+	resetSocketEvent, setTestModeEvent
+	],
 	
 	RegisterEvents: function(client) {
 		console.log('registering events');
