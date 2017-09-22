@@ -4,6 +4,7 @@ const messageEvent = require('./message');
 const disconnectEvent = require('./disconnect');
 const kickEvent = require('./kick');
 const muteEvent = require('./mute');
+const banEvent = require('./ban');
 
 /* TEST EVENTS IMPORTS */
 const resetSocketEvent = require('./resetSocket');
@@ -12,7 +13,8 @@ const setTestModeEvent = require('./setTestMode');
 module.exports = {
 	EVENTS: [
 	/* CHAT EVENTS */
-	authEvent, messageEvent, disconnectEvent, kickEvent, muteEvent,
+	authEvent, messageEvent, disconnectEvent,
+    kickEvent, muteEvent, banEvent,
 	/* TEST EVENTS */
 	resetSocketEvent, setTestModeEvent
 	],

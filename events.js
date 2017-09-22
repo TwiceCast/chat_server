@@ -5,11 +5,13 @@ module.exports = {
 	SET_TEST_MODE_STRICT: true,
     KICK_STRICT: true,
     MUTE_STRICT: true,
+    BAN_STRICT: true,
 	
 	// Event mandatory parameters
 	AuthProperties: ['username', 'password', 'room'],
 	MessageProperties: ['content'],
 	SetTestModeProperties: ['value'],
     KickProperties: ['username'],
-    MuteProperties: ['username', 'duration']
+    MuteProperties: ['username', 'duration'],
+    BanProperties: ['username']
 }
