@@ -14,9 +14,17 @@ module.exports = {
 			}
 			else
 			{
-				data.user = client.username;
-				client.to(client.room).emit('message', data); // emit message to all client except sender
-				client.emit('message', data); // emit to sender (proof of receive)
+                if (client.isMuted && Date.now() <= client.muteDate + client.muteDuration * 1000) {
+                    client.emit('mute', {'duration': (client.muteDuration * 1000 - (Date.now() - client.muteDate)) / 1000});
+                } else {
+				    data.user = client.username;
+				    client.to(client.room).emit('message', data); // emit message to all client except sender
+				    client.emit('message', data); // emit to sender (proof of receive)
+                    if (client.isMuted) {
+                        client.isMuted = false;
+                        client.muteDuration = 0;
+                    }
+                }
 			}
 		});
 	}

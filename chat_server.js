@@ -20,6 +20,11 @@ io.on('connection', function(client) {
 	client.room = null;
 	client.token = null;
 	
+    // Mute System
+    client.isMuted = false;
+    client.muteDate = null;
+    client.muteDuration = 0;
+    
 	client.testMode = false;
 	
 	client.on('testRoom', function(data) {
