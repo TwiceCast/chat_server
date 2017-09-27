@@ -6,6 +6,8 @@ module.exports = {
     KICK_STRICT: true,
     MUTE_STRICT: true,
     BAN_STRICT: true,
+    SET_MOD_STRICT: true,
+    DEL_MOD_STRICT: true,
 	
 	// Event mandatory parameters
 	AuthProperties: ['username', 'password', 'room'],
@@ -13,5 +15,7 @@ module.exports = {
 	SetTestModeProperties: ['value'],
     KickProperties: ['username'],
     MuteProperties: ['username', 'duration'],
-    BanProperties: ['username']
+    BanProperties: ['username'],
+    SetModProperties: ['username'],
+    DelModProperties: ['username']
 }
