@@ -51,7 +51,7 @@ module.exports = {
 								client.token = response['token'];
 								client.join(client.room, function() {
 									if (ClientManager.AddClient(client, client.room)) {
-										client.emit('auth', {'code': 200, 'message': 'Authentification complete'});
+										client.emit('auth', {'code': 200, 'message': 'Authentification complete', 'accessLevel': config.RIGHTS.ADMIN});
 										console.log("Client (" + client.username + ") Joined #" + client.room + "!");
 									} else {
 										client.emit('cerror', {'code': 401, 'message': 'Authentification failed'});
