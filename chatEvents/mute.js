@@ -25,7 +25,7 @@ module.exports = {
                 if (clientToMute != null) {
                     console.log('Muting...' + client.username + ' for ' + data.duration + 's');
                     clientToMute.emit('mute', {'duration': data.duration});
-                    client.emit('mute', {'message': 'Success', 'reason': data.username + ' has been muted for ' + data.duration});
+                    client.emit('mute', {'message': 'Success', 'reason': data.username + ' has been muted for ' + data.duration + ' seconds'});
                     clientToMute.isMuted = true;
                     clientToMute.muteDate = Date.now();
                     clientToMute.muteDuration = +data.duration;
