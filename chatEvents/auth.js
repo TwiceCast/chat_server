@@ -129,6 +129,7 @@ module.exports = {
                                                                 if (response4.length > 0) {
                                                                     for (var mute_data of response4) {
                                                                         var endDate = Date.parse(mute_data['end']);
+                                                                        console.log(Date.now());
                                                                         var timeNow = Date.now();
                                                                         if (endDate > timeNow) {
                                                                             var duration = endDate - timeNow;
