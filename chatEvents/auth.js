@@ -130,7 +130,7 @@ module.exports = {
                                                                     for (var mute_data of response4) {
                                                                         var endDate = Date.parse(mute_data['end']);
                                                                         var timeNow = Date.now();
-                                                                        console.log(timeNow.toString());
+                                                                        console.log(timeNow.getTime());
                                                                         if (endDate > timeNow) {
                                                                             var duration = endDate - timeNow;
                                                                             client.isMuted = true;
