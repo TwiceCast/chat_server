@@ -12,13 +12,21 @@ const config = require('./config');
 const EventManager = require('./chatEvents/EVENTS');
 const ClientManager = require('./ClientManager');
 
+var colors = require('colors');
+
 io.on('connection', function(client) {
 	console.log("New connection !");
 	
+    client.uid = -1;
+    client.displayedName = null;
 	client.username = null;
 	client.password = null;
 	client.room = null;
 	client.token = null;
+
+    // Right system
+    client.chatToken = null;
+    client.rank = config.RIGHTS.UNKNOW;
 	
     // Mute System
     client.isMuted = false;

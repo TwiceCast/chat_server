@@ -1,4 +1,5 @@
 const ClientManager = require('../ClientManager');
+const config = require('../config');
 
 module.exports = {
 	RegisterEvent: function(client) {
@@ -11,9 +12,12 @@ module.exports = {
 			if (client.room) {
 				client.leave(client.room);
 			}
+            client.uid = -1;
 			client.room = null;
 			client.password = null;
 			client.token = null;
+            client.chatToken = null;
+            client.rank = config.RIGHTS.UNKNOW;
 			
 			ClientManager.RemoveClient(client);
 		});

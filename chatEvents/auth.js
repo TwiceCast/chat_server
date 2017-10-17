@@ -3,6 +3,8 @@ const config = require('../config');
 const utils = require('../utils');
 const events = require('../events');
 const ClientManager = require('../ClientManager');
+var JWT = require('jsonwebtoken');
+const colors = require('colors');
 
 module.exports = {
 	RegisterEvent: function(client) {
@@ -45,19 +47,130 @@ module.exports = {
 							var response = JSON.parse(str);
 							if (response['token'])
 							{
+                                var decoded = JWT.decode(response['token'], {complete: true});
+                                console.log('---------'.cyan);
+                                console.log(decoded);
+                                console.log('---------'.cyan);
 								client.username = data.username;
 								client.password = data.password;
 								client.room = data.room;
 								client.token = response['token'];
-								client.join(client.room, function() {
-									if (ClientManager.AddClient(client, client.room)) {
-										client.emit('auth', {'code': 200, 'message': 'Authentification complete', 'accessLevel': config.RIGHTS.ADMIN});
-										console.log("Client (" + client.username + ") Joined #" + client.room + "!");
-									} else {
-										client.emit('cerror', {'code': 401, 'message': 'Authentification failed'});
-										console.log("Client (" + client.username + ") Client Manager Failed!");
-									}
-								});
+                                client.uid = decoded.payload.uid;
+
+                                var options2 = {
+                                    host: config.API_URL,
+                                    path: '/streams/' + client.room + '/chat',
+                                    method: 'GET',
+                                    headers: {'Content-Type': 'application/json', 'Authorization': client.token}
+                                };
+
+                                var callback2 = function(response2) {
+                                    var str2 = '';
+                                    response2.on('data', function (chunk) {
+                                        str2 += chunk;
+                                    });
+
+                                    response2.on('end', function () {
+                                        var response2 = JSON.parse(str2);
+                                        if (response2['token']) {
+                                            client.chatToken = response2['token'];
+                                            var decodedChat = JWT.decode(response2['token'], {complete: true});
+                                            console.log(decodedChat);
+                                            client.displayedName = decodedChat.payload.username;
+                                            client.rank = config.RIGHTS.USER;
+                                            for (var tmp_rank of decodedChat.payload.rights) {
+                                                var tmp_irank = parseInt(tmp_rank);
+                                                var tmp_nrank = config.RANKS[tmp_irank].right;
+                                                if (tmp_nrank < client.rank && tmp_nrank != config.RIGHTS.UNKNOW) {
+                                                    client.rank = tmp_nrank;
+                                                }
+                                            }
+
+                                            var options3 = {
+                                                host: config.API_URL,
+                                                path: '/streams/' + client.room + '/chat/ban/' + client.uid,
+                                                method: 'GET',
+                                                headers: {'Content-Type': 'application/json', 'Authorization': client.token}
+                                            }
+
+                                            var callback3 = function(response3) {
+                                                var str3 = '';
+                                                response3.on('data', function(chunck) {
+                                                    str3 += chunck;
+                                                });
+
+                                                response3.on('end', function() {
+                                                    console.log('/streams/' + client.room + '/chat/ban/' + client.uid);
+                                                    var response3 = JSON.parse(str3);
+                                                    if (response3['end']) {
+                                                        var endDate = Date.parse(response3['end']);
+                                                        var timeNow = Date.now();
+                                                        if (endDate > timeNow) {
+                                                            client.emit('ban', {'message': 'Disconnected', 'reason':'You have been banned !'});
+                                                            client.disconnect(true);
+                                                        }
+                                                    } else {
+                                                        var options4 = {
+                                                            host: config.API_URL,
+                                                            path: '/streams/' + client.room + '/chat/mute/' + client.uid,
+                                                            method: 'GET',
+                                                            headers: {'Content-Type': 'application/json', 'Authorization': client.token}
+                                                        }
+
+                                                        var callback4 = function(response4) {
+                                                            var str4 = '';
+                                                            response4.on('data', function(chunck) {
+                                                                str4 += chunck;
+                                                            });
+
+                                                            response4.on('end', function() {
+                                                                var response4 = JSON.parse(str4);
+                                                                console.log(response4);
+                                                                if (response4.length > 0) {
+                                                                    for (var mute_data of response4) {
+                                                                        var endDate = Date.parse(mute_data['end']);
+                                                                        var timeNow = Date.now();
+                                                                        if (endDate > timeNow) {
+                                                                            var duration = endDate - timeNow;
+                                                                            client.isMuted = true;
+                                                                            client.muteDate = timeNow;
+                                                                            client.muteDuration = +duration;
+                                                                        }
+                                                                    }
+                                                                    if (client.isMuted) {
+                                                                        client.emit('mute', {'duration': client.muteDuration});
+                                                                    }
+                                                                }
+
+                                                                client.join(client.room, function() {
+                                                                    if (ClientManager.AddClient(client, client.room)) {
+                                                                        client.emit('auth', {'code': 200, 'message': 'Authentification complete', 'accessLevel': client.rank});
+                                                                        console.log("Client (" + client.username + ") Joined #" + client.room + "!");
+                                                                    } else {
+                                                                        client.emit('cerror', {'code': 401, 'message': 'Authentification failed'});
+                                                                        console.log("Client (" + client.username + ") Client Manager Failed!");
+                                                                    }
+                                                                });
+                                                            });
+                                                        }
+
+                                                        var req4 = https.request(options4, callback4);
+                                                        req4.end();
+                                                    }
+                                                });
+                                            }
+
+                                            var req3 = https.request(options3, callback3);
+                                            req3.end();
+                                        } else {
+                                            console.log(response2);
+                                            client.emit('cerror', {'code': 401, 'message': 'Authentification failed'});
+                                        }
+                                    });
+                                }
+
+                                var req2 = https.request(options2, callback2);
+                                req2.end();
 							}
 							else
 							{

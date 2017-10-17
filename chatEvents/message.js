@@ -18,6 +18,7 @@ module.exports = {
                     client.emit('mute', {'duration': (client.muteDuration * 1000 - (Date.now() - client.muteDate)) / 1000});
                 } else {
 				    data.user = client.username;
+                    data.displayName = client.displayedName;
 				    client.to(client.room).emit('message', data); // emit message to all client except sender
 				    client.emit('message', data); // emit to sender (proof of receive)
                     if (client.isMuted) {

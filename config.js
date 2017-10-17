@@ -5,11 +5,17 @@ module.exports = {
 	SERVER_PORT: '3006',
 	API_URL: "api.twicecast.ovh",
 	TEST_MODE_ENABLE: true,
+    JWT_SECRET: 'supersecret',
+
+    /*
+    ** RIGHTS
+    */
 	RIGHTS: {
 		ADMIN: 0,
 		MOD: 1,
 		VIP: 2,
-		USER: 3
+		USER: 3,
+        UNKNOW: -1
 	},
 	RANKS: {
 		1: {'title': 'Administrator', 'description': 'The highest role', 'right': 0},
