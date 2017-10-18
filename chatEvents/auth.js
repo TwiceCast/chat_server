@@ -101,6 +101,7 @@ module.exports = {
 
                                                 response3.on('end', function() {
                                                     var response3 = JSON.parse(str3);
+                                                    var isBanned = false;
                                                     if (response3.length > 0) {
                                                         for (var ban_data of response3) {
                                                             var endBanDate = new Date(Date.parse(ban_data['end']));
@@ -110,10 +111,12 @@ module.exports = {
                                                             if (rendBanDate > rtimeNow) {
                                                                 client.emit('ban', {'message': 'Disconnected', 'reason':'You have been banned !'});
                                                                 client.disconnect(true);
+                                                                isBanned = true;
                                                             }
                                                         }
                                                     }
                                                     // Client is not banned
+                                                    if (isBanned == false) {
                                                         var options4 = {
                                                             host: config.API_URL,
                                                             path: '/streams/' + client.room + '/chat/mute/' + client.uid,
@@ -163,6 +166,7 @@ module.exports = {
 
                                                         var req4 = https.request(options4, callback4);
                                                         req4.end();
+                                                    }
                                                 });
                                             }
 
