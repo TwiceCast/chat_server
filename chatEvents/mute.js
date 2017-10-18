@@ -42,7 +42,7 @@ module.exports = {
                     var req = https.request(options, function(e) {
                         var str = '';
                         console.log('request mute to API');
-                        e.on('data', (chunck) => {str += chunck;});
+                        e.on('data', (chunck) => {console.log('Response: ' + chunck);str += chunck;});
                         e.on('end', () => {console.log(str);})
                     });
 				    var mute_data = {};
