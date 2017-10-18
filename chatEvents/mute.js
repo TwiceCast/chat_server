@@ -1,6 +1,7 @@
 const utils = require('../utils');
 const events = require('../events');
 const ClientManager = require('../ClientManager');
+const config = require('../config');
 
 module.exports = {
 	RegisterEvent: function(client) {
@@ -29,6 +30,21 @@ module.exports = {
                     clientToMute.isMuted = true;
                     clientToMute.muteDate = Date.now();
                     clientToMute.muteDuration = +data.duration;
+
+                    var options = {
+                        host: config.API_URL,
+                        path: '/streams/' + client.room + '/chat/mute',
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'}
+                    };
+
+                    var req = https.request(options, function() {});
+				    var mute_data = {};
+				    mute_data['id'] = clientToMute.uid;
+				    mute_data['duration'] = +data.duration;
+				    var r_a = JSON.stringify(auth_data);
+				    req.write(r_a);
+				    req.end();
                 } else {
                     client.emit('cerror', {'code': 400, 'message': 'Mute error (user not found) !'});
                     console.log('Client mute error ! (user not found)');
