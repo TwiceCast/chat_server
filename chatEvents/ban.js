@@ -33,7 +33,7 @@ module.exports = {
 
                     var options = {
                         host: config.API_URL,
-                        path: '/streams/' + clientToMute.room + '/chat/ban',
+                        path: '/streams/' + clientToBan.room + '/chat/ban',
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': client.token}
                     };
