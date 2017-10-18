@@ -46,7 +46,7 @@ module.exports = {
                         console.log('headers:', e.headers);
                         e.on('data', (chunck) => {console.log('Response: ' + chunck);str += chunck;});
                         e.on('end', () => {console.log(str);});
-                        e.on('error', (err) => console.log(err););
+                        e.on('error', (err) => {console.log(err);});
                     });
 				    var mute_data = {};
 				    mute_data['id'] = clientToMute.uid;
