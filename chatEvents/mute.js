@@ -43,7 +43,7 @@ module.exports = {
 				    var mute_data = {};
 				    mute_data['id'] = clientToMute.uid;
 				    mute_data['duration'] = +data.duration;
-				    var r_a = JSON.stringify(auth_data);
+				    var r_a = JSON.stringify(mute_data);
 				    req.write(r_a);
 				    req.end();
                 } else {
