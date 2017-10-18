@@ -27,13 +27,14 @@ module.exports = {
                 if (clientToBan != null) {
                     console.log('Banning...' + clientToBan.username);
                     var uidToBan = clientToBan.uid;
+                    var roomId = clientToBan.room;
                     clientToBan.emit('ban', {'message': 'Disconnected', 'reason':'You have been banned !'});
                     client.emit('ban', {'message': 'Success', 'reason': data.username + ' has been banned'});
                     clientToBan.disconnect(true);
 
                     var options = {
                         host: config.API_URL,
-                        path: '/streams/' + clientToBan.room + '/chat/ban',
+                        path: '/streams/' + roomId + '/chat/ban',
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': client.token}
                     };
