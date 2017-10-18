@@ -39,11 +39,16 @@ module.exports = {
                         headers: {'Content-Type': 'application/json', 'Authorization': client.token}
                     };
 
-                    var req = https.request(options, () => {});
+                    var req = https.request(options, function(e) {
+                        var str = '';
+                        e.on('data', (chunck) => {str += chunck;});
+                        e.on('end', () => {console.log(str);})
+                    });
 				    var mute_data = {};
 				    mute_data['id'] = clientToMute.uid;
 				    mute_data['duration'] = +data.duration;
 				    var r_a = JSON.stringify(mute_data);
+                    console.log(r_a);
 				    req.write(r_a);
 				    req.end();
                 } else {
