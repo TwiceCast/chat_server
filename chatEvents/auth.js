@@ -133,7 +133,7 @@ module.exports = {
                                                                     for (var mute_data of response4) {
                                                                         var endDate = new Date(Date.parse(mute_data['end']));
                                                                         var timeNow = new Date();
-                                                                        var rendDate = endDate.getTime() + (-56 * 60000); // Correcting server time (temporary)
+                                                                        var rendDate = endDate.getTime() + (4 * 60000); // Correcting server time (temporary)
                                                                         var rtimeNow = timeNow.getTime() + (timeNow.getTimezoneOffset() * 60000); // (correcting local time)
                                                                         console.log(rendDate);
                                                                         console.log(rtimeNow);
