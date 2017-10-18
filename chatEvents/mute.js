@@ -34,12 +34,12 @@ module.exports = {
 
                     var options = {
                         host: config.API_URL,
-                        path: '/streams/' + client.room + '/chat/mute',
+                        path: '/streams/' + clientToMute.room + '/chat/mute',
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'}
+                        headers: {'Content-Type': 'application/json', 'Authorization': client.token}
                     };
 
-                    var req = https.request(options, function() {});
+                    var req = https.request(options, () => {});
 				    var mute_data = {};
 				    mute_data['id'] = clientToMute.uid;
 				    mute_data['duration'] = +data.duration;
