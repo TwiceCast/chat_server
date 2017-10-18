@@ -100,16 +100,20 @@ module.exports = {
                                                 });
 
                                                 response3.on('end', function() {
-                                                    console.log('/streams/' + client.room + '/chat/ban/' + client.uid);
                                                     var response3 = JSON.parse(str3);
-                                                    if (response3['end']) {
-                                                        var endDate = Date.parse(response3['end']);
-                                                        var timeNow = Date.now();
-                                                        if (endDate > timeNow) {
-                                                            client.emit('ban', {'message': 'Disconnected', 'reason':'You have been banned !'});
-                                                            client.disconnect(true);
+                                                    if (response3.length > 0) {
+                                                        for (var ban_data of response3) {
+                                                            var endBanDate = new Date(Date.parse(ban_data['end']));
+                                                            var timeNow = new Date();
+                                                            var rendBanDate = endBanDate.getTime() + (-56 * 60000); // Correcting server time (temporary)
+                                                            var rtimeNow = timeNow.getTime() + (timeNow.getTimezoneOffset() * 60000); // correcting local time
+                                                            if (rendBanDate > rtimeNow) {
+                                                                client.emit('ban', {'message': 'Disconnected', 'reason':'You have been banned !'});
+                                                                client.disconnect(true);
+                                                            }
                                                         }
-                                                    } else {
+                                                    }
+                                                    // Client is not banned
                                                         var options4 = {
                                                             host: config.API_URL,
                                                             path: '/streams/' + client.room + '/chat/mute/' + client.uid,
@@ -125,17 +129,17 @@ module.exports = {
 
                                                             response4.on('end', function() {
                                                                 var response4 = JSON.parse(str4);
-                                                                console.log(response4);
                                                                 if (response4.length > 0) {
                                                                     for (var mute_data of response4) {
-                                                                        var endDate = Date.parse(mute_data['end']);
-                                                                        var timeNow = Date.now();
-                                                                        console.log(new Date().toString());
-                                                                        if (endDate > timeNow) {
-                                                                            var duration = endDate - timeNow;
+                                                                        var endDate = new Date(Date.parse(mute_data['end']));
+                                                                        var timeNow = new Date();
+                                                                        var rendDate = endDate.getTime() + (-56 * 60000); // Correcting server time (temporary)
+                                                                        var rtimeNow = timeNow.getTime() + (timeNow.getTimezoneOffset() * 60000); // (correcting local time)
+                                                                        if (rendDate > rtimeNow) {
+                                                                            var duration = rendDate - rtimeNow;
                                                                             client.isMuted = true;
                                                                             client.muteDate = timeNow;
-                                                                            client.muteDuration = +duration;
+                                                                            client.muteDuration = Math.floor(+duration / 1000);
                                                                         }
                                                                     }
                                                                     if (client.isMuted) {
@@ -157,7 +161,6 @@ module.exports = {
 
                                                         var req4 = https.request(options4, callback4);
                                                         req4.end();
-                                                    }
                                                 });
                                             }
 
