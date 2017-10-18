@@ -140,7 +140,7 @@ module.exports = {
                                                                         if (rendDate > rtimeNow) {
                                                                             var duration = rendDate - rtimeNow;
                                                                             client.isMuted = true;
-                                                                            client.muteDate = timeNow;
+                                                                            client.muteDate = Date.now();
                                                                             client.muteDuration = Math.floor(+duration / 1000);
                                                                         }
                                                                     }
