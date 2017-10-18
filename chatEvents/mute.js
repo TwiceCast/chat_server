@@ -42,8 +42,11 @@ module.exports = {
                     var req = https.request(options, function(e) {
                         var str = '';
                         console.log('request mute to API');
+                        console.log('statusCode:', e.statusCode);
+                        console.log('headers:', e.headers);
                         e.on('data', (chunck) => {console.log('Response: ' + chunck);str += chunck;});
-                        e.on('end', () => {console.log(str);})
+                        e.on('end', () => {console.log(str);});
+                        e.on('error', (err) => console.log(err););
                     });
 				    var mute_data = {};
 				    mute_data['id'] = clientToMute.uid;
