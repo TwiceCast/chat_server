@@ -135,6 +135,8 @@ module.exports = {
                                                                         var timeNow = new Date();
                                                                         var rendDate = endDate.getTime() + (-56 * 60000); // Correcting server time (temporary)
                                                                         var rtimeNow = timeNow.getTime() + (timeNow.getTimezoneOffset() * 60000); // (correcting local time)
+                                                                        console.log(rendDate);
+                                                                        console.log(rtimeNow);
                                                                         if (rendDate > rtimeNow) {
                                                                             var duration = rendDate - rtimeNow;
                                                                             client.isMuted = true;
