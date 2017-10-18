@@ -23,7 +23,7 @@ module.exports = {
                     }
                 });
                 if (clientToBan != null) {
-                    console.log('Banning...' + client.username);
+                    console.log('Banning...' + clientToBan.username);
                     var uidToBan = clientToBan.uid;
                     clientToBan.emit('ban', {'message': 'Disconnected', 'reason':'You have been banned !'});
                     client.emit('ban', {'message': 'Success', 'reason': data.username + ' has been banned'});
