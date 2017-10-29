@@ -1,4 +1,5 @@
 const utils = require('../utils');
+const config = require('../config');
 const events = require('../events');
 
 module.exports = {
@@ -6,11 +7,15 @@ module.exports = {
 		client.on('deleteMessage', function(data) {
 			if (!utils.isAuth(client)) {
 				utils.AuthentificationRequired(client);
-				console.log("Client message error ! (Authentification)");
+				console.log("Client deleteMessage error ! (Authentification)");
 			}
 			else if (!utils.hasProperties(data, events.DeleteMessageProperties, events.DLETE_MESSAGE_STRICT)) {
 				client.emit('cerror', {'code': 400, 'message': 'Message syntax error !'});
-				console.log("Client message error ! (Properties)");
+				console.log("Client deleteMessage error ! (Properties)");
+			}
+			else if (client.rank > config.RIGHTS.MOD || client.rank == client.rank = config.RIGHTS.UNKNOW) {
+				client.emit('cerror', {'code': 401, 'message': 'Unauthorized'});
+				console.log("Client deleteMessage error ! (Rights)");
 			}
 			else
 			{

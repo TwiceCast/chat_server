@@ -15,6 +15,10 @@ module.exports = {
 				client.emit('cerror', {'code': 400, 'message': 'Mute syntax error !'});
 				console.log("Client mute error ! (Properties)");
 			}
+			else if (client.rank > config.RIGHTS.MOD || client.rank == client.rank = config.RIGHTS.UNKNOW) {
+				client.emit('cerror', {'code': 401, 'message': 'Unauthorized'});
+				console.log("Client deleteMessage error ! (Rights)");
+			}
 			else
 			{
 				var clientsInRoom = ClientManager.GetClientsInRoom(client.room);
