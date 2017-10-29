@@ -15,7 +15,7 @@ module.exports = {
 				client.emit('cerror', {'code': 400, 'message': 'Ban syntax error !'});
 				console.log("Client ban error ! (Properties)");
 			}
-			else if (client.rank > config.RIGHTS.MOD || client.rank == client.rank = config.RIGHTS.UNKNOW) {
+			else if (client.rank > config.RIGHTS.MOD || client.rank == config.RIGHTS.UNKNOW) {
 				client.emit('cerror', {'code': 401, 'message': 'Unauthorized'});
 				console.log("Client deleteMessage error ! (Rights)");
 			}
