@@ -41,7 +41,13 @@ module.exports = {
                         console.log('statusCode:', e.statusCode);
                         console.log('headers:', e.headers);
                         e.on('data', (chunck) => {console.log('Response: ' + chunck);str += chunck;});
-                        e.on('end', () => {console.log(str);});
+                        e.on('end', () => {
+                            console.log(str);
+                            console.log(clientToDelMod.username + ' is not Mod anymore');
+							clientToDelMod.rank = config.RIGHTS.USER;
+							clientToDelMod.emit('delMod', {});
+							client.emit('delMod', {'message': 'Success', 'reason': clientToDelMod.username + ' is not Mod anymore'});
+                        });
                         e.on('error', (err) => {console.log(err);});
                     });
 					
@@ -51,11 +57,6 @@ module.exports = {
                     console.log(r_a);
 				    req.write(r_a);
 				    req.end();
-					
-					console.log(clientToDelMod.username + ' is not Mod anymore');
-					clientToDelMod.rank = config.RIGHTS.USER;
-                    clientToDelMod.emit('delMod', {});
-                    client.emit('delMod', {'message': 'Success', 'reason': clientToDelMod.username + ' is not Mod anymore'});
                 } else {
                     client.emit('cerror', {'code': 400, 'message': 'DelMod error (user not found) !'});
                     console.log('Client DelMod error ! (user not found)');
