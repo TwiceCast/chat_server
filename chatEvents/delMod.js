@@ -27,12 +27,16 @@ module.exports = {
                 if (clientToDelMod != null) {
                     // DEL MOD HERE
 					
+					var delmod_data = {};
+				    delmod_data['right'] = 10;
+				    var r_a = JSON.stringify(delmod_data);
+					
 					// Request API
 					var options = {
                         host: config.API_URL,
                         path: '/streams/' + client.room + '/rights/' + clientToDelMod.uid,
                         method: 'DELETE',
-                        headers: {'Content-Type': 'application/json', 'Authorization': client.token}
+                        headers: {'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(r_a), 'Authorization': client.token}
                     };
 					
 					var req = https.request(options, function(e) {
@@ -51,9 +55,7 @@ module.exports = {
                         e.on('error', (err) => {console.log(err);});
                     });
 					
-					var delmod_data = {};
-				    delmod_data['right'] = 10;
-				    var r_a = JSON.stringify(delmod_data);
+					
                     console.log(r_a);
 				    req.write(r_a);
 				    req.end();
