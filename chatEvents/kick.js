@@ -1,6 +1,7 @@
 const utils = require('../utils');
 const events = require('../events');
 const ClientManager = require('../ClientManager');
+const config = require('../config');
 
 module.exports = {
 	RegisterEvent: function(client) {

@@ -196,15 +196,20 @@ module.exports = {
 					});
 				}
 			
-				var req = https.request(options, callback);
-				var auth_data = {};
-				auth_data['email'] = data.username;
-				auth_data['password'] = data.password;
-				console.log("auth");
-				var r_a = JSON.stringify(auth_data);
-				console.log(r_a);
-				req.write(r_a);
-				req.end();
+                try {
+				    var req = https.request(options, callback);
+				    var auth_data = {};
+				    auth_data['email'] = data.username;
+				    auth_data['password'] = data.password;
+				    console.log("auth");
+				    var r_a = JSON.stringify(auth_data);
+				    console.log(r_a);
+				    req.write(r_a);
+				    req.end();
+                } catch (ex) {
+                    console.error(e);
+                    return (-1);
+                }
 			}
 		});
 	}

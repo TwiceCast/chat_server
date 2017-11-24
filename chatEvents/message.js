@@ -20,6 +20,7 @@ module.exports = {
 					data.id = Math.floor((Math.random() * 1000000));
 				    data.user = client.username;
                     data.displayName = client.displayedName;
+					data.rank = client.rank;
 				    client.to(client.room).emit('message', data); // emit message to all client except sender
 				    client.emit('message', data); // emit to sender (proof of receive)
                     if (client.isMuted) {

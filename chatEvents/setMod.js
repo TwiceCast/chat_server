@@ -1,6 +1,7 @@
 const utils = require('../utils');
 const events = require('../events');
 const ClientManager = require('../ClientManager');
+const https = require('https');
 const config = require('../config');
 
 module.exports = {
@@ -29,7 +30,7 @@ module.exports = {
 					// Request API
 					var options = {
                         host: config.API_URL,
-                        path: '/streams/' + clientToMute.room + '/rights/' + clientToSetMod.uid,
+                        path: '/streams/' + client.room + '/rights/' + clientToSetMod.uid,
                         method: 'POST',
                         headers: {'Content-Type': 'application/json', 'Authorization': client.token}
                     };
@@ -40,7 +41,13 @@ module.exports = {
                         console.log('statusCode:', e.statusCode);
                         console.log('headers:', e.headers);
                         e.on('data', (chunck) => {console.log('Response: ' + chunck);str += chunck;});
-                        e.on('end', () => {console.log(str);});
+                        e.on('end', () => {
+                            console.log(str);
+                            console.log(clientToSetMod.username + ' is now Mod');
+				            clientToSetMod.rank = config.RIGHTS.MOD;
+                            clientToSetMod.emit('setMod', {});
+                            client.emit('setMod', {'message': 'Success', 'reason': clientToSetMod.username + ' is now Mod'});
+                        });
                         e.on('error', (err) => {console.log(err);});
                     });
 					
@@ -50,11 +57,6 @@ module.exports = {
                     console.log(r_a);
 				    req.write(r_a);
 				    req.end();
-					
-					console.log(clientToSetMod.username + ' is now Mod');
-					clientToSetMod.rank = config.RIGHTS.MOD;
-                    clientToSetMod.emit('setMod', {});
-                    client.emit('setMod', {'message': 'Success', 'reason': clientToSetMod.username + ' is now Mod'});
                 } else {
                     client.emit('cerror', {'code': 400, 'message': 'SetMod error (user not found) !'});
                     console.log('Client SetMod error ! (user not found)');
