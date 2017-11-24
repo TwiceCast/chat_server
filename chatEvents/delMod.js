@@ -30,7 +30,7 @@ module.exports = {
 					// Request API
 					var options = {
                         host: config.API_URL,
-                        path: '/streams/' + clientToMute.room + '/rights/' + clientToDelMod.uid,
+                        path: '/streams/' + client.room + '/rights/' + clientToDelMod.uid,
                         method: 'DELETE',
                         headers: {'Content-Type': 'application/json', 'Authorization': client.token}
                     };
@@ -46,7 +46,7 @@ module.exports = {
                     });
 					
 					var delmod_data = {};
-				    delmod_data['rightId'] = 10;
+				    delmod_data['right'] = 10;
 				    var r_a = JSON.stringify(delmod_data);
                     console.log(r_a);
 				    req.write(r_a);

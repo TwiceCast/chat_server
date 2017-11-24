@@ -52,7 +52,7 @@ module.exports = {
                     });
 					
 					var setmod_data = {};
-				    setmod_data['rightId'] = 10;
+				    setmod_data['right'] = 10;
 				    var r_a = JSON.stringify(setmod_data);
                     console.log(r_a);
 				    req.write(r_a);
